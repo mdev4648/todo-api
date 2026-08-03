@@ -22,13 +22,27 @@ package main
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/mdev4648/todo-api/internal/routes"
+	"github.com/mdev4648/todo-api/internal/config"
+	"log"
+
+
 )
 
 func main() {
 
+	cfg := config.Load()
+
 	router := gin.Default()
+
+	log.Printf("%s is starting on port %s (%s)",
+		cfg.AppName,
+		cfg.Port,
+		cfg.AppEnv,
+	)
+
+	router.Run(":" + cfg.Port)
 
 	routes.RegisterRoutes(router)
 
-	router.Run(":8000")
+	// router.Run(":8000")
 }
