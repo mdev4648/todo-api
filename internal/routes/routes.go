@@ -2,7 +2,7 @@ package routes
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/mdev4648/todo-api/internal/handlers"
+	"github.com/mdev4648/todo-api/internal/handlers" //Then every internal import starts with: github.com/mdev4648/todo-api/
 )
 
 func RegisterRoutes(router *gin.Engine) {
