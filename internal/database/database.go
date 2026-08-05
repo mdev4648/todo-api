@@ -6,6 +6,7 @@ import (
 
 	"github.com/mdev4648/todo-api/internal/config"
 
+	"github.com/mdev4648/todo-api/internal/models"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -31,6 +32,14 @@ func Connect(cfg *config.Config) {
 	}
 
 	DB = db
+
+	err = DB.AutoMigrate(
+		&models.User{}, //creates a pointer to an empty user. GORM expects pointers so it can inspect and work with the model efficiently.
+	)
+
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	log.Println("Database connected successfully")
 }
