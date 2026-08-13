@@ -20,31 +20,30 @@
 package main
 
 import (
-	"github.com/gin-gonic/gin"
-	"github.com/mdev4648/todo-api/internal/routes"
-	"github.com/mdev4648/todo-api/internal/config"
-	"github.com/mdev4648/todo-api/internal/database"
 	"log"
 
-
+	"github.com/gin-gonic/gin"
+	"github.com/mdev4648/todo-api/internal/config"
+	"github.com/mdev4648/todo-api/internal/database"
+	"github.com/mdev4648/todo-api/internal/routes"
+	"github.com/mdev4648/todo-api/internal/services"
 )
 
 func main() {
 
 	cfg := config.Load() // Load the configuration from environment variables or .env file. This function returns a pointer to a Config struct, which contains the application configuration.
 	database.Connect(cfg)
-    log.Printf("Loaded config: %+v\n", cfg) // Print the loaded configuration to the console for debugging purposes. The %+v format verb is used to print the struct with field names.
+	log.Printf("Loaded config: %+v\n", cfg) // Print the loaded configuration to the console for debugging purposes. The %+v format verb is used to print the struct with field names.
 	router := gin.Default()
+	authService := services.NewAuthService(cfg)
 
-	log.Printf("%s is starting on port %s (%s)",
+	log.Printf("%s is starting onnn port %s (%s)",
 		cfg.AppName,
 		cfg.Port,
 		cfg.AppEnv,
 	)
-	routes.RegisterRoutes(router)
+	routes.RegisterRoutes(router, authService) // Register the application routes with the router. The RegisterRoutes function takes the router and an instance of AuthService as arguments. The AuthService is created using the NewAuthService function, which takes the configuration as an argument.
 	router.Run(":" + cfg.Port)
-
-	
 
 	// router.Run(":8000")
 }

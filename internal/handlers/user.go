@@ -88,3 +88,55 @@ func Register(c *gin.Context) {
 		},
 	})
 }
+
+func Login(authService *services.AuthService) gin.HandlerFunc { // this function takes an instance of AuthService as a parameter and returns a gin.HandlerFunc. This allows us to inject the AuthService dependency into the handler, enabling it to use the service's methods for authentication.
+
+	return func(c *gin.Context) {
+
+		var req dto.LoginRequest
+
+		if err := c.ShouldBindJSON(&req); err != nil {
+
+			c.JSON(http.StatusBadRequest, gin.H{
+				"error": err.Error(),
+			})
+
+			return
+		}
+
+		token, user, err := authService.Login(
+			req.Email,
+			req.Password,
+		)
+
+		if err != nil {
+
+			c.JSON(http.StatusUnauthorized, gin.H{
+				"error": err.Error(),
+			})
+
+			return
+		}
+
+		c.JSON(http.StatusOK, gin.H{
+			"message": "Login successful",
+			"token":   token,
+			"user": gin.H{
+				"id":    user.ID,
+				"name":  user.Name,
+				"email": user.Email,
+			},
+		})
+	}
+}
+
+// This function doesn't directly handle the request.
+
+// It creates and returns another function.
+// Because our handler needs authService.
+
+// We can then give that service to the handler.
+
+// This is called dependency injection.
+
+// We'll use this heavily as the project grows.
