@@ -38,6 +38,12 @@ func main() {
 	userService := services.NewUserService(
 		userRepository,
 	)
+
+	todoRepository := repositories.NewTodoRepository()
+
+	todoService := services.NewTodoService(
+		todoRepository,
+	)
 	log.Printf("Loaded config: %+v\n", cfg) // Print the loaded configuration to the console for debugging purposes. The %+v format verb is used to print the struct with field names.
 	router := gin.Default()
 	authService := services.NewAuthService(cfg, userRepository)
@@ -52,6 +58,7 @@ func main() {
 		router,
 		authService,
 		userService,
+		todoService,
 		cfg,
 	)
 	router.Run(":" + cfg.Port)

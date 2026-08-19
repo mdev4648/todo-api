@@ -8,7 +8,7 @@ import (
 	"github.com/mdev4648/todo-api/internal/services"
 )
 
-func RegisterRoutes(router *gin.Engine, authService *services.AuthService, userService *services.UserService, cfg *config.Config) {
+func RegisterRoutes(router *gin.Engine, authService *services.AuthService, userService *services.UserService, todoService *services.TodoService, cfg *config.Config) {
 
 	router.GET("/health", handlers.Health) //Because we're passing the function, not calling it. so we don't use parentheses. This registers a route that responds to HTTP GET requests.
 	// router.POST("/api/register", handlers.Register)
@@ -27,6 +27,11 @@ func RegisterRoutes(router *gin.Engine, authService *services.AuthService, userS
 	protected.GET(
 		"/profile",
 		handlers.Profile,
+	)
+
+	protected.POST(
+		"/todos",
+		handlers.CreateTodo(todoService),
 	)
 
 }
