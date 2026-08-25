@@ -35,6 +35,7 @@ func Connect(cfg *config.Config) {
 
 	err = DB.AutoMigrate(
 		&models.User{}, //creates a pointer to an empty user. GORM expects pointers so it can inspect and work with the model efficiently.
+		&models.Todo{},
 	)
 
 	if err != nil {

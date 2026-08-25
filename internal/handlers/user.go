@@ -46,47 +46,94 @@ import (
 //			"message": "User created successfully",
 //		})
 //	}
-func Register(c *gin.Context) {
+////////////////////////////////////////////////////////////////////////////////
+// func Register(c *gin.Context) {
 
-	var req dto.RegisterRequest
+// 	var req dto.RegisterRequest
 
-	if err := c.ShouldBindJSON(&req); err != nil {
+// 	if err := c.ShouldBindJSON(&req); err != nil {
 
-		c.JSON(http.StatusBadRequest, gin.H{
-			"error": err.Error(),
-		})
+// 		c.JSON(http.StatusBadRequest, gin.H{
+// 			"error": err.Error(),
+// 		})
 
-		return
-	}
+// 		return
+// 	}
 
-	user, err := services.RegisterUser(req)
+// 	user, err := services.RegisterUser(req)
 
-	if err != nil {
+// 	if err != nil {
 
-		if err.Error() == "email already exists" {
+// 		if err.Error() == "email already exists" {
 
-			c.JSON(http.StatusConflict, gin.H{
+// 			c.JSON(http.StatusConflict, gin.H{
+// 				"error": err.Error(),
+// 			})
+
+// 			return
+// 		}
+
+// 		c.JSON(http.StatusInternalServerError, gin.H{
+// 			"error": "failed to create user",
+// 		})
+
+// 		return
+// 	}
+
+// 	c.JSON(http.StatusCreated, gin.H{
+// 		"message": "User created successfully",
+// 		"user": gin.H{
+// 			"id":    user.ID,
+// 			"name":  user.Name,
+// 			"email": user.Email,
+// 		},
+// 	})
+// }
+
+func Register(userService *services.UserService) gin.HandlerFunc {
+
+	return func(c *gin.Context) {
+
+		var req dto.RegisterRequest
+
+		if err := c.ShouldBindJSON(&req); err != nil {
+
+			c.JSON(http.StatusBadRequest, gin.H{
 				"error": err.Error(),
 			})
 
 			return
 		}
 
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"error": "failed to create user",
+		user, err := userService.RegisterUser(req)
+
+		if err != nil {
+
+			if err.Error() == "email already exists" {
+
+				c.JSON(http.StatusConflict, gin.H{
+					"error": err.Error(),
+				})
+
+				return
+			}
+
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"error": "failed to create user",
+			})
+
+			return
+		}
+
+		c.JSON(http.StatusCreated, gin.H{
+			"message": "User created successfully",
+			"user": gin.H{
+				"id":    user.ID,
+				"name":  user.Name,
+				"email": user.Email,
+			},
 		})
-
-		return
 	}
-
-	c.JSON(http.StatusCreated, gin.H{
-		"message": "User created successfully",
-		"user": gin.H{
-			"id":    user.ID,
-			"name":  user.Name,
-			"email": user.Email,
-		},
-	})
 }
 
 func Login(authService *services.AuthService) gin.HandlerFunc { // this function takes an instance of AuthService as a parameter and returns a gin.HandlerFunc. This allows us to inject the AuthService dependency into the handler, enabling it to use the service's methods for authentication.
