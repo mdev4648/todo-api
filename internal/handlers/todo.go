@@ -67,3 +67,44 @@ func CreateTodo(
 		})
 	}
 }
+
+func GetTodos(
+	todoService *services.TodoService,
+) gin.HandlerFunc {
+
+	return func(c *gin.Context) {
+
+		value, exists := c.Get("user_id")
+
+		if !exists {
+			c.JSON(http.StatusUnauthorized, gin.H{
+				"error": "User not authenticated",
+			})
+			return
+		}
+
+		userIDFloat, ok := value.(float64)
+
+		if !ok {
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"error": "Invalid user ID",
+			})
+			return
+		}
+
+		userID := uint(userIDFloat)
+
+		todos, err := todoService.GetTodos(userID)
+
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"error": "Failed to get todos",
+			})
+			return
+		}
+
+		c.JSON(http.StatusOK, gin.H{
+			"todos": todos,
+		})
+	}
+}

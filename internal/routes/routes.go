@@ -34,4 +34,9 @@ func RegisterRoutes(router *gin.Engine, authService *services.AuthService, userS
 		handlers.CreateTodo(todoService),
 	)
 
+	protected.GET(
+		"/todos",
+		handlers.GetTodos(todoService),
+	)
+
 }

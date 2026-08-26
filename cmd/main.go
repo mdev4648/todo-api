@@ -1,22 +1,3 @@
-// package main
-
-// import "github.com/gin-gonic/gin"
-
-// func main() {
-
-// 	router := gin.Default() //creates a new HTTP server with useful defaults: This creates a router.
-
-// 	router.GET("/health", func(c *gin.Context) {  //This registers a route that responds to HTTP GET requests.
-// 		//in django like:  def health(request):
-// 		c.JSON(200, gin.H{
-// 			"status": "OK",
-// 		})
-
-// 	})
-
-// 	router.Run(":8000")
-// }
-
 package main
 
 import (
@@ -44,7 +25,6 @@ func main() {
 	todoService := services.NewTodoService(
 		todoRepository,
 	)
-	log.Printf("Loaded config: %+v\n", cfg) // Print the loaded configuration to the console for debugging purposes. The %+v format verb is used to print the struct with field names.
 	router := gin.Default()
 	authService := services.NewAuthService(cfg, userRepository)
 

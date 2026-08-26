@@ -36,3 +36,8 @@ func (s *TodoService) CreateTodo(
 
 	return &todo, nil
 }
+
+func (s *TodoService) GetTodos(userID uint) ([]models.Todo, error) {
+
+	return s.TodoRepository.FindByUserID(userID)
+}
